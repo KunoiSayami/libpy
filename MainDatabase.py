@@ -1,5 +1,5 @@
 import MySQLdb
-from botlib.Config import Config
+from libpy.Config import Config
 
 class MainDatabase(object):
 	def __init__(self, noUseDatabase=False):
