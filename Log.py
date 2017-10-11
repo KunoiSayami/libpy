@@ -9,12 +9,16 @@ import sys
 import time
 from threading import Lock
 from libpy.Config import Config
+import inspect
 
 printLock = Lock()
 logFile = Config.log.logfile and open(Config.log.logfile, 'a')
 
 if Config.log.log_debug:
 	assert(Config.log.debug_lvl>=1)
+
+def get_name():
+	return inspect.getouterframes(inspect.currentframe())[3]
 
 def info(fmt, *args, **kwargs):
 	log('INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)

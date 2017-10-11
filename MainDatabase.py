@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-# MainDatabase.py
-# Copyright (C) 2017 Too-Naive and contributors
-#
-# This module is part of gu-cycle-bot and is released under
-# the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
 import MySQLdb
-from libpy.Config import Config
+from botlib.Config import Config
 
 class MainDatabase(object):
 	def __init__(self, noUseDatabase=False):
@@ -28,14 +22,14 @@ class MainDatabase(object):
 			self.rollback()
 		self.close()
 
-	def execute(self, sql, *args):
+	def execSQL(self, sql, *args):
 		return self._cursor.execute(sql, args)
 
 	def getData(self):
 		return self._cursor.fetchall()
 
 	def query(self, sql, *args):
-		self.execute(sql, *args)
+		self.execSQL(sql, *args)
 		return self.getData()
 
 	def commit(self):
