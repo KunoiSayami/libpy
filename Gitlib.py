@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# GitBackupSQL.py
+# Gitlib.py
 # Copyright (C) 2017 Too-Naive and contributors
 #
 # This module is part of gu-cycle-bot and is released under
@@ -8,9 +8,6 @@ import libpy.Config as Config
 from git import Repo,Git
 import libpy.Log as Log
 import shutil,os
-from libpy.MainDatabase import MainDatabase
-from base64 import b64encode,b64decode
-from libpy.Encrypt import b64encrypt,b64decrypt
 
 wkdir = 'workingdir'
 
@@ -64,36 +61,3 @@ class pygitlib:
 
 	def push(self):
 		self.repo.origin.push()
-
-
-class bklib:
-	def backup(self,query_sql_statements,a_mode=True):
-		Log.debug(2,'Entering bklib.backup(), a mode is {}',Log.tfget(continue_mode))
-		Log.debug(3,'[query_sql_statements = \"{}\"]',query_sql_statements)
-		write_mode = 'a'
-		if not a_mode:
-			write_mode = 'w'
-		with MainDatabase() as db:
-			r = db.query(query_sql_statements)
-		finalfile = ''
-		for x in r:
-			st = ''
-			for y in x:
-				st += b64encode(str(y)) + '\\n'
-			finalfile += st + '\\\\n'
-		with open(os.path.join('.',
-			os.path.join(wkdir,Config.git.filenmae)),
-					write_mode) as fout:
-			if write_mode:
-				fout.write('\\\\n')
-			a,b,c = b64encrypt(finalfile)
-			fout.write(a+'\\n'+b+'\\n'+c)
-		Log.debug(2,'Exiting bklib.backup()')
-
-	def restore(self,sql_structure_statements):
-		Log.debug(2,'Entering bklib.restore()')
-		with open(os.path.join('.',
-			os.path.join(wkdir,Config.git.filenmae))) as fin:
-			raw = fin.read().split('\\\\n')
-		
-		Log.debug(2,'Exiting bklib.restore()')

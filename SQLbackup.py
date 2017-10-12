@@ -31,13 +31,12 @@ import libpy.Config
 # MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
 # To take multiple databases backup, create any file like /backup/dbnames.txt and put databses names one on each line and assignd to DB_NAME variable.
 
-def func_backup_sql():
+def func_backup_sql(DB_NAME=Config.database.db_name):
 	Log.debug(2,'Entering func_backup_sql()')
 	DB_HOST = Config.database.host
 	DB_USER = Config.database.user
 	DB_USER_PASSWORD = Config.database.passwd
 	#DB_NAME = '/backup/dbnames.txt'
-	DB_NAME = Config.database.db_name
 	BACKUP_PATH = os.getcwd()
 
 	# Getting current datetime to create seprate backup folder like "12012013-071334".
