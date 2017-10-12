@@ -18,7 +18,7 @@ import re
 
 # security check
 assert(Config.encrypt.key)
-assert(type(Config.encrypt.key) == type(str()) &&
+assert(type(Config.encrypt.key) == type(str()) and
 	Config.encrypt.key != str())
 assert(len(Config.encrypt.key)>6)
 assert(re.match(r'^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$',
