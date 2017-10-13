@@ -41,7 +41,7 @@ def func_backup_sql(
 	#DB_NAME = '/backup/dbnames.txt'
 
 	# Getting current datetime to create seprate backup folder like "12012013-071334".
-	DATETIME = 'sqlbkup'
+	#DATETIME=time.strftime('%m%d%Y-%H%M%S')
 
 	TODAYBACKUPPATH = BACKUP_PATH + DATETIME
 
