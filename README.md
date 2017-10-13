@@ -13,3 +13,11 @@ Log.py | Format log output
 ## License
 
 GPL v3
+
+## Hint
+
+#### Install MySQLdb
+
+```bash
+pip install MYSQL-python
+```

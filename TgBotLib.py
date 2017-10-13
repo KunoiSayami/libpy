@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# MainDatabase.py
+# TgBotLib.py
 # Copyright (C) 2017 Too-Naive and contributors
 #
 # This module is part of gu-cycle-bot and is released under
@@ -67,7 +67,6 @@ class telepot_bot:
 				Log.error('Exception {} occurred',e.__name__)
 				time.sleep(0.03)
 		return (content_type, chat_type, chat_id)
-
 
 	def onMessage(self,msg):
 		content_type, chat_type, chat_id = self.glance(msg)
