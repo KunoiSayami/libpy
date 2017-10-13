@@ -27,21 +27,20 @@ import datetime
 
 import libpy.Log
 import libpy.Config
-
 # MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
 # To take multiple databases backup, create any file like /backup/dbnames.txt and put databses names one on each line and assignd to DB_NAME variable.
 
-def func_backup_sql(DB_NAME=Config.database.db_name):
+def func_backup_sql(
+		DB_NAME=Config.database.db_name,
+		BACKUP_PATH = os.getcwd(),
+		DATETIME=time.strftime('%m%d%Y-%H%M%S')):
 	Log.debug(2,'Entering func_backup_sql()')
 	DB_HOST = Config.database.host
 	DB_USER = Config.database.user
 	DB_USER_PASSWORD = Config.database.passwd
 	#DB_NAME = '/backup/dbnames.txt'
-	BACKUP_PATH = os.getcwd()
 
 	# Getting current datetime to create seprate backup folder like "12012013-071334".
-	#DATETIME = time.strftime('%m%d%Y-%H%M%S')
-
 	DATETIME = 'sqlbkup'
 
 	TODAYBACKUPPATH = BACKUP_PATH + DATETIME
@@ -65,23 +64,23 @@ def func_backup_sql(DB_NAME=Config.database.db_name):
 
 	# Starting actual database backup process.
 	if multi:
-		 in_file = open(DB_NAME,"r")
-		 flength = len(in_file.readlines())
-		 in_file.close()
-		 p = 1
-		 dbfile = open(DB_NAME,"r")
+		in_file = open(DB_NAME,"r")
+		flength = len(in_file.readlines())
+		in_file.close()
+		p = 1
+		dbfile = open(DB_NAME,"r")
 
-		 while p <= flength:
-				 db = dbfile.readline()   # reading database name from file
-				 db = db[:-1]         # deletes extra line
-				 dumpcmd = "mysqldump -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + TODAYBACKUPPATH + "/" + db + ".sql"
-				 os.system(dumpcmd)
-				 p = p + 1
-		 dbfile.close()
+		while p <= flength:
+				db = dbfile.readline()   # reading database name from file
+				db = db[:-1]         # deletes extra line
+				dumpcmd = 'mysqldump -u {} -p{} {} > {}.sql'.format(DB_USER,DB_USER_PASSWORD,db,os.path.join(TODAYBACKUPPATH,db))
+				os.system(dumpcmd)
+				p = p + 1
+		dbfile.close()
 	else:
-		 db = DB_NAME
-		 dumpcmd = "mysqldump -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + TODAYBACKUPPATH + "/" + db + ".sql"
-		 os.system(dumpcmd)
+		db = DB_NAME
+		dumpcmd = 'mysqldump -u {} -p{} {} > {}.sql'.format(DB_USER,DB_USER_PASSWORD,db,os.path.join(TODAYBACKUPPATH,db))
+		os.system(dumpcmd)
 	Log.debug(3,"Backup script completed")
 	Log.debug(3,"Your backups has been created in '{}' directory",TODAYBACKUPPATH)
 	Log.info('[{}] SQL backup successful',Log.get_name())

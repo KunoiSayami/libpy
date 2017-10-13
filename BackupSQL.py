@@ -16,7 +16,7 @@ from libpy.util import current_join_path
 def backup_and_encrypt(target_database_name=Config.database.db_name,
 		workingdir='workingdir',sub_folder_name='sqlbkup'):
 	Log.debug(2,'Entering backup_and_encrypt()')
-	func_backup_sql(target_database_name)
+	func_backup_sql(target_database_name,DATETIME=sub_folder_name)
 	with open(current_join_path(sub_folder_name,target_database_name+'.sql')) as  fin:
 		raw = fin.read()
 	with open(current_join_path(workingdir,Config.github.filename),'w') as fout:
