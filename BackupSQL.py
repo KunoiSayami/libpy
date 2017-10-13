@@ -12,6 +12,7 @@ from libpy.Encrypt import b64encrypt,b64decrypt
 import libpy.Log as Log
 from libpy.SQLbackup import func_backup_sql
 from libpy.util import current_join_path
+import os
 
 def backup_and_encrypt(target_database_name=Config.database.db_name,
 		workingdir='workingdir',sub_folder_name='sqlbkup'):
@@ -24,9 +25,16 @@ def backup_and_encrypt(target_database_name=Config.database.db_name,
 		fout.write(a+'\\\\n'+b+'\\\\n'+c)
 	Log.debug(2,'Exiting backup_and_encrypt()')
 
-def restore_sql():
+def restore_sql(
+		target_database_name=Config.database.db_name,
+		workingdir='workingdir'):
 	Log.debug(2,'Entering restore_sql()')
-	
+	with open(current_join_path(workingdir,Config.github.filename)) as fin:
+		raw = fin.read()
+	with open(os.path.join('.','temp.sql'),'w') as fout:
+		fout.write(b64decrypt(raw.split('\\\\n')))
+	__execute_sql()
+	os.remove('temp.sql')
 	Log.debug(2,'Exiting restore_sql()')
 
 
