@@ -13,12 +13,12 @@ wkdir = 'workingdir'
 
 
 class pygitlib:
-	def __init__(self,init=False):
+	def __init__(self,target=wkdir,init=False):
 		Log.debug(2,'Entering pygitlib.__init__(), init mode is {}',Log.tfget(init))
 		Log.info('Initializing pygitlib...')
 		self.repo = None
 		if not init:
-			self.load_git_dir()
+			self.load_git_dir(target)
 		else:
 			self.clone()
 		Log.info('Initialized pygitlib() successful')

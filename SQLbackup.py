@@ -27,8 +27,15 @@ import datetime
 
 import libpy.Log
 import libpy.Config
+from libpy.Gitlib import pygitlib
 # MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
 # To take multiple databases backup, create any file like /backup/dbnames.txt and put databses names one on each line and assignd to DB_NAME variable.
+
+def backup_daemon(
+		DB_NAME=Config.database.db_name,
+		BACKUP_PATH = os.getcwd(),
+		DATETIME=time.strftime('%m%d%Y-%H%M%S')):
+	func_backup_sql(DB_NAME,BACKUP_PATH,DATETIME)
 
 def func_backup_sql(
 		DB_NAME=Config.database.db_name,
