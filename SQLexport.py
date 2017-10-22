@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# SQLbackup.py
+# SQLexport.py
 # Copyright (C) 2017 Too-Naive and contributors
 #
 # This module is part of gu-cycle-bot and is released under
@@ -25,17 +25,10 @@ import os
 import time
 import datetime
 
-import libpy.Log
-import libpy.Config
-from libpy.Gitlib import pygitlib
+import libpy.Log as Log
+from libpy.Config import Config
 # MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
 # To take multiple databases backup, create any file like /backup/dbnames.txt and put databses names one on each line and assignd to DB_NAME variable.
-
-def backup_daemon(
-		DB_NAME=Config.database.db_name,
-		BACKUP_PATH = os.getcwd(),
-		DATETIME=time.strftime('%m%d%Y-%H%M%S')):
-	func_backup_sql(DB_NAME,BACKUP_PATH,DATETIME)
 
 def func_backup_sql(
 		DB_NAME=Config.database.db_name,
@@ -50,8 +43,8 @@ def func_backup_sql(
 	# Getting current datetime to create seprate backup folder like "12012013-071334".
 	#DATETIME=time.strftime('%m%d%Y-%H%M%S')
 
-	TODAYBACKUPPATH = BACKUP_PATH + DATETIME
-
+	#TODAYBACKUPPATH = BACKUP_PATH + DATETIME
+	TODAYBACKUPPATH = os.path.join(BACKUP_PATH,DATETIME)
 	# Checking if backup folder already exists or not. If not exists will create it.
 	Log.debug(3,"creating backup folder")
 	if not os.path.exists(TODAYBACKUPPATH):

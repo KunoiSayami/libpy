@@ -30,6 +30,12 @@ def get_debug_info():
 	if Config.log.log_debug:
 		return (True,Config.log.debug_lvl)
 
+def custom_info(custom_head, fmt, *args, **kwargs):
+	log(custom_head, Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
+
+def infoex(from_source, fmt, *args, **kwargs):
+	log(from_source+'][INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
+
 def debug(level ,fmt, *args, **kwargs):
 	assert(type(level) is int)
 	if level <= Config.log.debug_lvl:

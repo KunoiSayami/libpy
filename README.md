@@ -21,3 +21,5 @@ GPL v3
 ```bash
 pip install MYSQL-python
 ```
+
+If you have any other question of library file, such as how to use, please view `doc` folder.

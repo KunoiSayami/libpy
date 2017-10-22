@@ -4,15 +4,17 @@
 #
 # This module is part of gu-cycle-bot and is released under
 # the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
-
-import libpy.Config as Config
-from libpy.MainDatabase import MainDatabase
-from base64 import b64encode,b64decode
-from libpy.Encrypt import b64encrypt,b64decrypt
+import time
+import os,shutil
 import libpy.Log as Log
-from libpy.SQLbackup import func_backup_sql
+from threading import Thread
+from libpy.Config import Config
+from libpy.Gitlib import pygitlib
+from base64 import b64encode,b64decode
 from libpy.util import current_join_path
-import os
+from libpy.MainDatabase import MainDatabase
+from libpy.SQLexport import func_backup_sql
+from libpy.Encrypt import b64encrypt,b64decrypt
 
 def backup_and_encrypt(target_database_name=Config.database.db_name,
 		workingdir='workingdir',sub_folder_name='sqlbkup'):
@@ -20,16 +22,18 @@ def backup_and_encrypt(target_database_name=Config.database.db_name,
 	func_backup_sql(target_database_name,DATETIME=sub_folder_name)
 	with open(current_join_path(sub_folder_name,target_database_name+'.sql')) as  fin:
 		raw = fin.read()
-	with open(current_join_path(workingdir,Config.github.filename),'w') as fout:
+	with open(current_join_path(workingdir,Config.git.filename),'w') as fout:
 		a,b,c=b64encrypt(raw)
 		fout.write(a+'\\\\n'+b+'\\\\n'+c)
+	if os.path.isdir(sub_folder_name):
+		shutil.rmtree(sub_folder_name)
 	Log.debug(2,'Exiting backup_and_encrypt()')
 
 def restore_sql(
 		target_database_name=Config.database.db_name,
 		workingdir='workingdir'):
 	Log.debug(2,'Entering restore_sql()')
-	with open(current_join_path(workingdir,Config.github.filename)) as fin:
+	with open(current_join_path(workingdir,Config.git.filename)) as fin:
 		raw = fin.read()
 	with open(os.path.join('.','temp.sql'),'w') as fout:
 		fout.write(b64decrypt(raw.split('\\\\n')))
@@ -43,3 +47,40 @@ def __execute_sql(sql_filename='temp.sql'):
 		with MainDatabase() as db:
 			for x in fin.read().split(';'):
 				db.execute(x)
+
+class sql_backup_daemon(Thread):
+	def __init__(
+		self,
+		target_dir='workingdir',
+		DB_NAME=Config.database.db_name,
+		sub_folder_name='sqlbkup'):
+		Log.debug(2,'Entering sql_backup_daemon.__init__()')
+		Thread.__init__(self)
+		if os.path.isdir(target_dir):
+			self.git = pygitlib(target_dir)
+			self.git.configure_create()
+			self.git.fetch()
+			self.git.pull()
+			self.git.revert_configure()
+		else:
+			self.git = pygitlib(target_dir,True)
+		self.target_dir = target_dir
+		self.DB_NAME = DB_NAME
+		self.daemon = True
+		self.sub_folder_name = sub_folder_name
+		#self.Lock = Lock()
+		Log.debug(2,'Exiting sql_backup_daemon.__init__()')
+
+	def run(self):
+		Log.debug(2,'Start sql_backup_daemon Thread')
+		while True:
+			Log.infoex('sql_backup_daemon Thread','Starting backup')
+			backup_and_encrypt(self.DB_NAME,self.target_dir,self.sub_folder_name)
+			self.git.add([Config.git.filename])
+			self.git.commit('Daily backup');
+			self.git.configure_create()
+			self.git.push()
+			self.git.revert_configure()
+			Log.infoex('sql_backup_daemon Thread','Backup successful')
+			time.sleep(60*60)
+

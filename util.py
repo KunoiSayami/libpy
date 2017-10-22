@@ -8,3 +8,10 @@ import os
 
 def current_join_path(subfolder,targetfile):
 	return os.path.join('.',os.path.join(subfolder,targetfile))
+
+def get_ssh_directory():
+	return os.path.join(os.path.join(os.path.expanduser('~'),'.ssh'))
+
+def parse_file_ssh_path(targetfile):
+	return os.path.join(os.path.join(os.path.join(os.path.expanduser('~'),'.ssh')),
+		targetfile)

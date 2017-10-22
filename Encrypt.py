@@ -76,7 +76,7 @@ def b64encrypt_data(plaintext):
 	iv, ciphertext, tag = encrypt_data_origin(plaintext)
 	return (b64encode(iv),b64encode(ciphertext),b64encode(tag))
 
-def b64decrypt_data(b64iv,b64ciphertext,b64tag)
+def b64decrypt_data(b64iv,b64ciphertext,b64tag):
 	return decrypt_data_origin(
 		b64decode(b64iv),b64decode(ciphertext),b64decode(b64tag))
 
