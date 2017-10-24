@@ -33,14 +33,15 @@ def restore_sql(
 		target_database_name=Config.database.db_name,
 		workingdir='workingdir'):
 	Log.debug(2,'Entering restore_sql()')
+	git = pygitlib(workingdir,init=True)
 	with open(current_join_path(workingdir,Config.git.filename)) as fin:
 		raw = fin.read()
 	with open(os.path.join('.','temp.sql'),'w') as fout:
-		fout.write(b64decrypt(raw.split('\\\\n')))
+		r = raw.split('\\\\n')
+		fout.write(b64decrypt(r[0],r[1],r[2]))
 	__execute_sql()
-	os.remove('temp.sql')
+	os.remove(os.path.join('.','temp.sql'))
 	Log.debug(2,'Exiting restore_sql()')
-
 
 def __execute_sql(sql_filename='temp.sql'):
 	with open(os.path.join('.',sql_filename)) as fin:
@@ -57,7 +58,7 @@ class sql_backup_daemon(Thread):
 		Log.debug(2,'Entering sql_backup_daemon.__init__()')
 		Thread.__init__(self)
 		if os.path.isdir(target_dir):
-			self.git = pygitlib(target_dir)
+			self.git = pygitlib(target_dir,init=True)
 			self.git.configure_create()
 			self.git.fetch()
 			self.git.pull()

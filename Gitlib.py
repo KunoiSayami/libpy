@@ -24,12 +24,10 @@ class pygitlib:
 		self.lockfile = os.path.join(self.ssh_locate,'libpy.lock')
 		self.git_ssh_addr = self.__get_source_address()
 		self.repo = None
-		self.configure_create()
 		if not init:
 			self.load_git_dir(target)
 		else:
 			self.clone()
-		self.revert_configure()
 		Log.info('Initialized pygitlib() successful')
 		Log.debug(2,'Exiting pygitlib.__init__()')
 
@@ -43,10 +41,12 @@ class pygitlib:
 			Log.debug(3,'Dir is already exist, delete it')
 			shutil.rmtree(wkdir)
 		Log.debug(3,'now at {}',os.getcwd())
+		self.configure_create()
 		#self.repo = Repo.clone_from(Config.git.source,wkdir,branch=branch)
 		self.repo = Repo.clone_from('git@{}:{}'.format(
 				'rf_def',self.__get_source_address()[1])
 			,wkdir,branch=branch)
+		self.revert_configure()
 		Log.debug(2,'Exiting pygitlib.clone()')
 
 	def load_git_dir(self,target=wkdir):

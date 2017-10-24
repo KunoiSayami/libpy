@@ -21,8 +21,9 @@ assert(Config.encrypt.key)
 assert(type(Config.encrypt.key) == type(str()) and
 	Config.encrypt.key != str())
 assert(len(Config.encrypt.key)>6)
-assert(re.match(r'^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$',
-	Config.encrypt.key))
+if Config.encrypt.require_strong_key:
+	assert(re.match(r'^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$',
+		Config.encrypt.key))
 
 key = hashlib.sha256(Config.encrypt.key.encode()).digest()
 
@@ -78,7 +79,7 @@ def b64encrypt_data(plaintext):
 
 def b64decrypt_data(b64iv,b64ciphertext,b64tag):
 	return decrypt_data_origin(
-		b64decode(b64iv),b64decode(ciphertext),b64decode(b64tag))
+		b64decode(b64iv),b64decode(b64ciphertext),b64decode(b64tag))
 
 def b64encrypt(data):
 	return b64encrypt_data(b64encode(data))

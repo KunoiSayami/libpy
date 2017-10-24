@@ -7,18 +7,23 @@
 from __future__ import print_function, division
 import sys
 import time
+import inspect,os
 from threading import Lock
 from libpy.Config import Config
-import inspect
 
 printLock = Lock()
 logFile = Config.log.logfile and open(Config.log.logfile, 'a')
+
+__currentcwdlen = len(os.getcwd())+1
+
 
 if Config.log.log_debug:
 	assert(Config.log.debug_lvl>=1)
 
 def get_name():
-	return inspect.getouterframes(inspect.currentframe())[3]
+	r = inspect.getouterframes(inspect.currentframe())[3]
+	return '{}.{}'.format(r[1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
+		r[3])
 
 def info(fmt, *args, **kwargs):
 	log('INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
@@ -32,9 +37,6 @@ def get_debug_info():
 
 def custom_info(custom_head, fmt, *args, **kwargs):
 	log(custom_head, Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
-
-def infoex(from_source, fmt, *args, **kwargs):
-	log(from_source+'][INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
 
 def debug(level ,fmt, *args, **kwargs):
 	assert(type(level) is int)
@@ -51,7 +53,7 @@ def tfget(value):
 	return {False:"Off",True:"On"}.get(value)
 
 def log(lvl, bLog, prtTarget, s, start='', end='\n'):
-	s = '{}[{}][{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, s, end)
+	s = '{}[{}]\t[{}] [{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()
 	try:
