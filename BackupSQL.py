@@ -75,13 +75,13 @@ class sql_backup_daemon(Thread):
 	def run(self):
 		Log.debug(2,'Start sql_backup_daemon Thread')
 		while True:
-			Log.infoex('sql_backup_daemon Thread','Starting backup')
+			Log.info('[Daemon] Starting backup')
 			backup_and_encrypt(self.DB_NAME,self.target_dir,self.sub_folder_name)
 			self.git.add([Config.git.filename])
 			self.git.commit('Daily backup');
 			self.git.configure_create()
 			self.git.push()
 			self.git.revert_configure()
-			Log.infoex('sql_backup_daemon Thread','Backup successful')
+			Log.info('[Daemon] Backup successful')
 			time.sleep(60*60)
 
