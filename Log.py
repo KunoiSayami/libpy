@@ -4,7 +4,7 @@
 #
 # This module is part of gu-cycle-bot and is released under
 # the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
-from __future__ import print_function, division
+from __future__ import print_function, division, unicode_literals
 import sys
 import time
 import inspect,os
@@ -34,6 +34,7 @@ def error(fmt, *args, **kwargs):
 def get_debug_info():
 	if Config.log.log_debug:
 		return (True,Config.log.debug_lvl)
+	return (False,-0x7ffffff)
 
 def custom_info(custom_head, fmt, *args, **kwargs):
 	log(custom_head, Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
