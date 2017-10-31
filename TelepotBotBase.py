@@ -15,6 +15,7 @@ import collections
 import bisect
 import libpy.Log as Log
 import telepot.exception
+import requests
 
 try:
     import Queue as queue
