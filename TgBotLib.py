@@ -6,9 +6,11 @@
 # the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
 from __future__ import unicode_literals
 import telepot
+import libpy.TelepotBotBase as TelepotBotBase
 import libpy.Log as Log
 from libpy.Config import Config
 import time
+
 
 class telepot_bot:
 	def __init__(self):
@@ -16,7 +18,7 @@ class telepot_bot:
 		WAIT_TIME = 0.03
 		Log.debug(2,'[bot_token = {}]',Config.bot.bot_token)
 		Log.info('Initializing bot settings...')
-		self.bot = telepot.Bot(Config.bot.bot_token)
+		self.bot = TelepotBotBase.Bot(Config.bot.bot_token)
 		self.bot_id = int(Config.bot.bot_token[:Config.bot.bot_token.find(':')])
 		Log.info('Success login telegram bot with Token {}**************',
 			Config.bot.bot_token[:Config.bot.bot_token.find(':')+5])
