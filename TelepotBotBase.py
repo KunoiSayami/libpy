@@ -15,7 +15,7 @@ import collections
 import bisect
 import libpy.Log as Log
 import telepot.exception
-import requests
+import urllib3
 
 try:
     import Queue as queue
@@ -75,7 +75,7 @@ class Bot(telepot.Bot):
 					Log.error('Catched telepot.exception.BadHTTPResponse')
 					if e.status == 502:
 						time.sleep(30)
-				except requests.exceptions.ReadTimeoutError:
+				except urllib3.exceptions.ReadTimeoutError:
 					Log.error('Catched requests.exceptions.ReadTimeoutError')
 					pass
 				except:
