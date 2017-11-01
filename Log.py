@@ -54,7 +54,7 @@ def tfget(value):
 	return {False:"Off",True:"On"}.get(value)
 
 def log(lvl, bLog, prtTarget, s, start='', end='\n'):
-	s = '{}[{}]\t[{}] [{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
+	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()
 	try:

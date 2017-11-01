@@ -83,5 +83,5 @@ def func_backup_sql(
 		os.system(dumpcmd)
 	Log.debug(3,"Backup script completed")
 	Log.debug(3,"Your backups has been created in '{}' directory",TODAYBACKUPPATH)
-	Log.info('SQL backup successful',start='\r')
+	Log.debug(2,'SQL backup successful')
 	Log.debug(3,'Exiting func_backup_sql()')

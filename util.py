@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 import datetime
 import os
+import libpy.Log as Log
 
 def current_join_path(subfolder,targetfile):
 	return os.path.join('.',os.path.join(subfolder,targetfile))
@@ -33,3 +34,4 @@ def sql_clear_comment(sql_file_path):
 			if x[:2] != '--':
 				#content.append(x)
 				fout.write(x)
+				Log.debug(5, '[x = {}]',x[:-1])
