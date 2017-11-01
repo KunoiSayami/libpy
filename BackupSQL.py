@@ -39,22 +39,22 @@ def backup_and_encrypt(target_database_name=Config.database.db_name,
 	func_backup_sql(target_database_name,DATETIME=sub_folder_name)
 
 	# clear auto created comment
-	sql_clear_comment(current_join_path(sub_folder_name,target_database_name+'.sql'))
-	with open(current_join_path(sub_folder_name,target_database_name+'.sql')) as fin:
+	sql_clear_comment(current_join_path(sub_folder_name, target_database_name+'.sql'))
+	with open(current_join_path(sub_folder_name, target_database_name+'.sql')) as fin:
 		raw = fin.read()
-	with open(current_join_path(workingdir,Config.git.filename+'_tmp'),'w') as fout:
-		a,b,c=b64encrypt(raw)
+	with open(current_join_path(workingdir, Config.git.filename+'_tmp'),'w') as fout:
+		a, b, c=b64encrypt(raw)
 		fout.write(a+'\\\\n'+b+'\\\\n'+c)
 
 	# check sql backup file change
-	need_add = not custom_diff(current_join_path(workingdir,Config.git.filename+'_tmp')
-		current_join_path(workingdir,Config.git.filename))
+	need_add = not custom_diff(current_join_path(workingdir, Config.git.filename+'_tmp'),
+		current_join_path(workingdir, Config.git.filename))
 	if need_add:
-		os.remove(current_join_path(workingdir,Config.git.filename))
-		os.rename(current_join_path(workingdir,Config.git.filename+'_tmp'),
-			current_join_path(workingdir,Config.git.filename))
+		os.remove(current_join_path(workingdir, Config.git.filename))
+		os.rename(current_join_path(workingdir, Config.git.filename+'_tmp'),
+			current_join_path(workingdir, Config.git.filename))
 	else:
-		os.remove(current_join_path(workingdir,Config.git.filename+'_tmp'))
+		os.remove(current_join_path(workingdir, Config.git.filename+'_tmp'))
 
 	if os.path.isdir(sub_folder_name):
 		shutil.rmtree(sub_folder_name)
