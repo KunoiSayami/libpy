@@ -18,6 +18,18 @@ def parse_file_ssh_path(targetfile):
 	return os.path.join(os.path.join(os.path.join(os.path.expanduser('~'),'.ssh')),
 		targetfile)
 
-def datetimedec(timestampnow,timestamp):
-	return (timestampnow.replace(microsecond=0)-timestamp.replace(microsecond=0)
+def datetime_sub_datetime(timestampnow,timestamp):
+	return (timestampnow.replace(microsecond=0) - timestamp.replace(microsecond=0)
 		).total_seconds()
+
+def datetime_sub_day(datetimein,days):
+	return datetimein - datetime.timedelta(days=days)
+
+def sql_clear_comment(sql_file_path):
+	with open(sql_file_path) as fin:
+		r = fin.readlines()
+	with open(sql_file_path,'w') as fout:
+		for x in r:
+			if x[:2] != '--':
+				#content.append(x)
+				fout.write(x)
