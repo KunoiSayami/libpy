@@ -7,6 +7,7 @@
 from __future__ import print_function, division, unicode_literals
 import sys
 import time
+import datetime
 import inspect,os
 from threading import Lock
 from libpy.Config import Config
@@ -14,11 +15,16 @@ from libpy.Config import Config
 printLock = Lock()
 logFile = Config.log.logfile and open(Config.log.logfile, 'a')
 
+loaddatetime = datetime.datetime.now().replace(microsecond=0)
+
 __currentcwdlen = len(os.getcwd())+1
 
 
 if Config.log.log_debug:
 	assert(Config.log.debug_lvl>=1)
+
+def get_runtime():
+	return str(datetime.datetime.now().replace(microsecond=0)-loaddatetime)
 
 def get_name():
 	r = inspect.getouterframes(inspect.currentframe())[3]
