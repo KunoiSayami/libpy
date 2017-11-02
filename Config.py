@@ -4,7 +4,6 @@
 #
 # This module is part of libpy and is released under
 # the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
-from __future__ import unicode_literals
 from ConfigParser import RawConfigParser
 
 def struct(name, kvs):
