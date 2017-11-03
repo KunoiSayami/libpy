@@ -28,11 +28,13 @@ def get_runtime():
 
 def get_name():
 	t = inspect.currentframe()
-	r = inspect.getouterframes()[3]
+	r = inspect.getouterframes(t)[3]
 	s = '{}.{}'.format(r[1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
 		r[3])
 	del r
 	del t
+	if s[0] == '.':
+		s = s[1:]
 	return s
 
 def info(fmt, *args, **kwargs):
