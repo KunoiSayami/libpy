@@ -27,9 +27,13 @@ def get_runtime():
 	return str(datetime.datetime.now().replace(microsecond=0)-loaddatetime)
 
 def get_name():
-	r = inspect.getouterframes(inspect.currentframe())[3]
-	return '{}.{}'.format(r[1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
+	t = inspect.currentframe()
+	r = inspect.getouterframes()[3]
+	s = '{}.{}'.format(r[1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
 		r[3])
+	del r
+	del t
+	return s
 
 def info(fmt, *args, **kwargs):
 	log('INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)

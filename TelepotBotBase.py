@@ -72,7 +72,7 @@ class Bot(telepot.Bot):
 						offset = max([relay_to_collector(update) for update in result]) + 1
 
 				except telepot.exception.BadHTTPResponse as e:
-					traceback.print_exc()
+					#traceback.print_exc()
 					Log.error('Catched telepot.exception.BadHTTPResponse')
 					if e.status == 502:
 						time.sleep(30)
