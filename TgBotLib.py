@@ -5,15 +5,14 @@
 # This module is part of libpy and is released under
 # the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
 from __future__ import unicode_literals
+import time
 import telepot
-import libpy.TelepotBotBase as TelepotBotBase
 import libpy.Log as Log
 from libpy.Config import Config
-import time
-
+import libpy.TelepotBotBase as TelepotBotBase
 
 class telepot_bot:
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
 		Log.debug(2,'Enter telepot_bot.__init__()')
 		WAIT_TIME = 0.03
 		Log.debug(2,'[bot_token = {}]',Config.bot.bot_token)
@@ -23,7 +22,7 @@ class telepot_bot:
 		Log.info('Success login telegram bot with Token {}**************',
 			Config.bot.bot_token[:Config.bot.bot_token.find(':')+5])
 		Log.info('Loading telepot_bot.custom_init()')
-		self.custom_init()
+		self.custom_init(*args, **kwargs)
 		Log.info('Loading telepot_bot.custom_init() successful')
 		Log.info('Bot settings initialized successful!')
 		Log.debug(2,'Exit telepot_bot.__init__()')
