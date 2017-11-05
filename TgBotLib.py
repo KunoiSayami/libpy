@@ -43,16 +43,16 @@ class telepot_bot:
 	def sendMessage(self,chat_id,message,**kwargs):
 		while True:
 			try:
-				Log.debug(2,'Calling telepot_bot.sendMessage() [chat_id = {},message = \'{}\', kwargs = {}]',
-					chat_id,message,kwargs)
-				self.bot.sendMessage(chat_id,message,**kwargs)
+				Log.debug(2,'Calling telepot_bot.sendMessage() [chat_id = {},message = {}, kwargs = {}]',
+					chat_id, repr(message), kwargs)
+				self.bot.sendMessage(chat_id, message, **kwargs)
 				break
 			except telepot.exception.TelegramError as e:
 				raise e
 			except Exception as e:
 				Log.error('Exception {} occurred',e.__name__)
-				Log.debug(1,'on telepot_bot.sendMessage() [chat_id = {},message = \'{}\', kwargs = {}]',
-					chat_id,message,kwargs)
+				Log.debug(1,'on telepot_bot.sendMessage() [chat_id = {},message = {}, kwargs = {}]',
+					chat_id, repr(message), kwargs)
 				time.sleep(self.WAIT_TIME)
 
 	def glance(self,msg):
