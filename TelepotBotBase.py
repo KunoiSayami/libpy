@@ -72,13 +72,15 @@ class Bot(telepot.Bot):
 						offset = max([relay_to_collector(update) for update in result]) + 1
 
 				except telepot.exception.BadHTTPResponse as e:
-					#traceback.print_exc()
-					Log.error('Catched telepot.exception.BadHTTPResponse')
+					Log.write_traceback_error('Catched telepot.exception.BadHTTPResponse')
 					if e.status == 502:
 						time.sleep(30)
 				except urllib3.exceptions.ReadTimeoutError:
-					Log.error('Catched requests.exceptions.ReadTimeoutError')
-					pass
+					Log.write_traceback_error('Catched requests.exceptions.ReadTimeoutError')
+				except telepot.exception.TelegramError as e:
+					Log.write_traceback_error('Catched telepot.exception.TelegramError (code = %d)'%e[1])
+				except urllib3.exceptions.ProtocolError:
+					Log.write_traceback_error('Catched urllib3.exceptions.ProtocolError')
 				except:
 					traceback.print_exc()
 				finally:

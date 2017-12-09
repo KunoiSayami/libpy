@@ -9,6 +9,7 @@ import sys
 import time
 import datetime
 import inspect,os
+import traceback,tempfile
 from threading import Lock
 from libpy.Config import Config
 
@@ -18,7 +19,6 @@ logFile = Config.log.logfile and open(Config.log.logfile, 'a')
 loaddatetime = datetime.datetime.now().replace(microsecond=0)
 
 __currentcwdlen = len(os.getcwd())+1
-
 
 if Config.log.log_debug:
 	assert(Config.log.debug_lvl>=1)
@@ -65,12 +65,27 @@ def reopen(path):
 def tfget(value):
 	return {False:"Off",True:"On"}.get(value)
 
-def log(lvl, bLog, prtTarget, s, start='', end='\n'):
+def write_traceback_error(error_msg,*args,**kwargs):
+	error(error_msg,pre_print=False,*args,**kwargs)
+	printLock.acquire()
+	try:
+		tmpfile = tempfile.SpooledTemporaryFile(mode='w')
+		traceback.print_exc(file=tmpfile)
+		tmpfile.seek(0)
+		s = tmpfile.read()
+		del tmpfile
+		if bLog and logFile:
+			logFile.write(s)
+			logFile.flush()
+	finally:
+		printLock.release()
+
+def log(lvl, bLog, prtTarget, s, start='', end='\n',pre_print=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()
 	try:
-		if f:
+		if pre_print and f:
 			f.write(s)
 			f.flush()
 		if bLog and logFile:
