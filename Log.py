@@ -74,7 +74,7 @@ def write_traceback_error(error_msg,*args,**kwargs):
 		tmpfile.seek(0)
 		s = tmpfile.read()
 		del tmpfile
-		if bLog and logFile:
+		if Config.log.log_err and logFile:
 			logFile.write(s)
 			logFile.flush()
 	finally:
