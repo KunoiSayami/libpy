@@ -48,7 +48,13 @@ class telepot_bot:
 				self.bot.sendMessage(chat_id, message, **kwargs)
 				break
 			except telepot.exception.TelegramError as e:
-				raise e
+				# Markdown fail
+				if e[-1]['error_code'] == 400 and 'Can\'t find end of the entity starting at byte' in e[-1]['description']:
+					# Must fail safe
+					self.bot.sendMessage(chat_id,'Markdown configure error, check settings or contact bot administrator if you think you are right')
+				else:
+					Log.error('Raise exception: {}',e.__name__)
+					raise e
 			except Exception as e:
 				Log.error('Exception {} occurred',e.__name__)
 				Log.debug(1,'on telepot_bot.sendMessage() [chat_id = {},message = {}, kwargs = {}]',
@@ -64,6 +70,7 @@ class telepot_bot:
 					content_type, chat_type, chat_id)
 				break
 			except telepot.exception.TelegramError as e:
+				Log.error('Raise exception: {}',e.__name__)
 				raise e
 			except Exception as e:
 				Log.error('Exception {} occurred',e.__name__)
