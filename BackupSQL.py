@@ -60,7 +60,6 @@ def backup_and_encrypt(target_database_name=Config.database.db_name,
 
 		os.remove(os.path.join('.','temp.sql')) # Remove decrypted file
 
-
 	Log.debug(3, '[need_add = {}]', need_add)
 
 	if need_add:
@@ -104,10 +103,10 @@ class sql_backup_daemon(Thread):
 		Thread.__init__(self)
 		if os.path.isdir(target_dir):
 			self.git = pygitlib(target_dir,init=True)
-			self.git.configure_create()
+			#self.git.configure_create()
 			self.git.fetch()
 			self.git.pull()
-			self.git.revert_configure()
+			#self.git.revert_configure()
 		else:
 			self.git = pygitlib(target_dir,True)
 		self.target_dir = target_dir
@@ -124,9 +123,9 @@ class sql_backup_daemon(Thread):
 			if backup_and_encrypt(self.DB_NAME,self.target_dir,self.sub_folder_name):
 				self.git.add([Config.git.filename])
 				self.git.commit('Daily backup');
-				self.git.configure_create()
+				#self.git.configure_create()
 				self.git.push()
-				self.git.revert_configure()
+				#self.git.revert_configure()
 				Log.debug(2,'[Daemon] Backup successful')
 			else:
 				Log.debug(2,'[Daemon] Backup successful (no update)')

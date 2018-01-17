@@ -20,8 +20,9 @@ class pygitlib:
 	def __init__(self,target=wkdir,init=False):
 		Log.debug(2,'Entering pygitlib.__init__(), init mode is {}',Log.tfget(init))
 		Log.info('Initializing pygitlib...')
-		self.ssh_locate = os.path.join(os.path.join(os.path.expanduser('~'),'.ssh'))
-		self.lockfile = os.path.join(self.ssh_locate,'libpy.lock')
+		#self.ssh_locate = os.path.join(os.path.join(os.path.expanduser('~'),'.ssh'))
+		#self.lockfile = os.path.join(self.ssh_locate,'libpy.lock')
+		self.ssh_key = os.path.join(os.getcwd(),Config.git.ssh_key)
 		self.git_ssh_addr = self.__get_source_address()
 		self.repo = None
 		if not init:
@@ -41,12 +42,11 @@ class pygitlib:
 			Log.debug(3,'Dir is already exist, delete it')
 			shutil.rmtree(wkdir)
 		Log.debug(3,'now at {}',os.getcwd())
-		self.configure_create()
-		#self.repo = Repo.clone_from(Config.git.source,wkdir,branch=branch)
+		os.environ['GIT_SSH_COMMAND'] = 'ssh -i %s'%self.ssh_key
 		self.repo = Repo.clone_from('git@{}:{}'.format(
 				'rf_def',self.__get_source_address()[1])
 			,wkdir,branch=branch)
-		self.revert_configure()
+		self.repo.git.custom_environment(GIT_SSH_COMMAND=os.environ['GIT_SSH_COMMAND'])
 		Log.debug(2,'Exiting pygitlib.clone()')
 
 	def load_git_dir(self,target=wkdir):
@@ -101,31 +101,4 @@ class pygitlib:
 		Log.debug(2,'Entering pygitlib.__release_lock()')
 		os.remove(self.lockfile)
 		Log.debug(2,'Exiting pygitlib.__release_lock()')
-
-	def configure_create(self):
-		Log.debug(2,'Entering pygitlib.configure_create()')
-		self.__aquire_lock()
-		try:
-			if not os.path.isfile(util.parse_file_ssh_path('config')):
-				with open(util.parse_file_ssh_path('config'),'w'):
-					pass
-			shutil.copy(util.parse_file_ssh_path('config'),
-				util.parse_file_ssh_path('config_backup'))
-			with open(util.parse_file_ssh_path('config'),'w') as fout:
-				fout.write('Host rf_def\n\tHostName {}\n\tIdentityFile {}'.format(
-					self.__get_source_address()[0],
-					os.path.join(os.getcwd(),Config.git.ssh_key)))
-		except source_not_found as e:
-			self.__release_lock()
-			Log.debug(2,'Exiting pygitlib.configure_create() (exception exit)')
-			raise e
-		Log.debug(2,'Exiting pygitlib.configure_create()')
-
-	def revert_configure(self):
-		Log.debug(2,'Entering pygitlib.revert_configure()')
-		shutil.copy(util.parse_file_ssh_path('config_backup'),
-			util.parse_file_ssh_path('config'))
-		os.remove(util.parse_file_ssh_path('config_backup'))
-		self.__release_lock()
-		Log.debug(2,'Exiting pygitlib.revert_configure()')
 		
