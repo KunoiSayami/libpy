@@ -9,8 +9,7 @@ from threading import Thread
 
 class AsyncLock:
 	def __init__(self,wait_time,sleep_time=0.01):
-		self.wait_time = wait_time
-		self.sleep_time = sleep_time
+		self.setDelay(wait_time,sleep_time)
 		self.lock = False
 	def setLock(self):
 		if self.lock:
@@ -25,4 +24,6 @@ class AsyncLock:
 	def waitForUnlock(self):
 		while self.lock:
 			time.sleep(self.sleep_time)
-
+	def setDelay(self,wait_time,sleep_time=0.01):
+		self.wait_time = wait_time
+		self.sleep_time = sleep_time
