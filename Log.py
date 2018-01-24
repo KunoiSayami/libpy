@@ -26,16 +26,28 @@ if Config.log.log_debug:
 def get_runtime():
 	return str(datetime.datetime.now().replace(microsecond=0)-loaddatetime)
 
-def get_name():
+def print_call_backfunc():
+	'''
+		This func can print stack track
+	'''
 	t = inspect.currentframe()
-	r = inspect.getouterframes(t)[3]
-	s = '{}.{}][{}'.format(r[1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
-		r[3],r[2])
+	r = inspect.getouterframes(t)
+	s = 'Stack track:\n'
+	for x in r[1:]:
+		s += '\t\t\t\t\t\tIn {}:{} function:{}\n'.format(x[1],x[2],x[3])
+	debug(3,'{}'.format(s))
 	del r
 	del t
-	if s[0] == '.':
-		s = s[1:]
-	return s
+	del s
+
+def get_name():
+	t = inspect.currentframe()
+	r = inspect.getouterframes(t)
+	s = '{}.{}][{}'.format(r[3][1][__currentcwdlen:-3].replace('\\','.').replace('/','.'),
+		r[3][3],r[3][2])
+	del r
+	del t
+	return s[1:] if s[0] == '.' else s
 
 def info(fmt, *args, **kwargs):
 	log('INFO', Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
@@ -44,9 +56,7 @@ def error(fmt, *args, **kwargs):
 	log('ERROR', Config.log.log_err, Config.log.print_err, fmt.format(*args), **kwargs)
 
 def get_debug_info():
-	if Config.log.log_debug:
-		return (True,Config.log.debug_lvl)
-	return (False,-0x7ffffff)
+	return (True,Config.log.debug_lvl) if Config.log.log_debug else (False,-0x7ffffff)
 
 def custom_info(custom_head, fmt, *args, **kwargs):
 	log(custom_head, Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
@@ -63,7 +73,7 @@ def reopen(path):
 	logFile = open(path, 'a')
 
 def tfget(value):
-	return {False:"Off",True:"On"}.get(value)
+	return 'On' if value else 'Off'
 
 def write_traceback_error(error_msg,*args,**kwargs):
 	error(error_msg,pre_print=False,*args,**kwargs)
