@@ -9,6 +9,7 @@ import sys
 import time
 import datetime
 import inspect,os
+from Queue import Queue
 import traceback,tempfile
 from threading import Lock
 from libpy.Config import Config
@@ -19,6 +20,8 @@ logFile = Config.log.logfile and open(Config.log.logfile, 'a')
 loaddatetime = datetime.datetime.now().replace(microsecond=0)
 
 __currentcwdlen = len(os.getcwd())+1
+
+error_queue = Queue()
 
 if Config.log.log_debug:
 	assert(Config.log.debug_lvl>=1)
@@ -62,7 +65,7 @@ def custom_info(custom_head, fmt, *args, **kwargs):
 	log(custom_head, Config.log.log_info, Config.log.print_info, fmt.format(*args), **kwargs)
 
 def debug(level ,fmt, *args, **kwargs):
-	assert(type(level) is int)
+	assert isinstance(level,int)
 	if level <= Config.log.debug_lvl:
 		log('DEBUG', Config.log.log_debug, Config.log.print_debug, fmt.format(*args), **kwargs)
 
@@ -94,6 +97,8 @@ def log(lvl, bLog, prtTarget, s, start='', end='\n',pre_print=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()
+	if lvl == 'ERROR':
+		error_queue.put(s)
 	try:
 		if pre_print and f:
 			f.write(s)
