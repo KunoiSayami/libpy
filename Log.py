@@ -81,7 +81,7 @@ def reopen(path):
 def tfget(value):
 	return 'On' if value else 'Off'
 
-def write_traceback_error(error_msg,*args,**kwargs):
+def write_traceback_error(error_msg, *args, **kwargs):
 	error(error_msg, pre_print=False, *args, **kwargs)
 	printLock.acquire()
 	try:
@@ -97,7 +97,7 @@ def write_traceback_error(error_msg,*args,**kwargs):
 	finally:
 		printLock.release()
 
-def log(lvl, bLog, prtTarget, s, start='', end='\n',pre_print=True):
+def log(lvl, bLog, prtTarget, s, start='', end='\n', pre_print=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()

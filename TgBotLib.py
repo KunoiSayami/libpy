@@ -22,6 +22,7 @@ class telepot_bot:
 		Log.info('Success login telegram bot with Token {}**************',
 			Config.bot.bot_token[:Config.bot.bot_token.find(':')+5])
 		Log.info('Loading telepot_bot.custom_init()')
+		self.fail_with_md = None
 		self.custom_init(*args, **kwargs)
 		Log.info('Loading telepot_bot.custom_init() successful')
 		Log.info('Bot settings initialized successful!')
@@ -49,11 +50,13 @@ class telepot_bot:
 				break
 			except telepot.exception.TelegramError as e:
 				# Markdown fail
-				if e[-1]['error_code'] == 400 and 'Can\'t find end of the entity starting at byte' in e[-1]['description']:
+				if self.fail_with_md is not None and e[-1]['error_code'] == 400 and \
+					'Can\'t find end of the entity starting at byte' in e[-1]['description']:
 					# Must fail safe
-					self.bot.sendMessage(chat_id,'Markdown configure error, check settings or contact bot administrator if you think you are right')
+					self.bot.sendMessage(chat_id, self.fail_with_md)
+					break
 				else:
-					Log.error('Raise exception: {}',e.__name__)
+					Log.error('Raise exception: {}',repr(e))
 					raise e
 			except Exception as e:
 				Log.error('Exception {} occurred',e.__name__)
