@@ -3,7 +3,7 @@
 # Copyright (C) 2017-2018 Too-Naive and contributors
 #
 # This module is part of libpy and is released under
-# the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
+# the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt
 #
 # origin from https://goo.gl/8PToR6
 import os

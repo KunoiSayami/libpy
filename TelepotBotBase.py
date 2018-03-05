@@ -3,7 +3,7 @@
 # Copyright (C) 2017-2018 Too-Naive and contributors
 #
 # This module is part of libpy and is released under
-# the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
+# the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt
 import telepot
 from telepot import _find_first_key
 import sys

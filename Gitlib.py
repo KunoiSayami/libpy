@@ -3,7 +3,7 @@
 # Copyright (C) 2017-2018 Too-Naive and contributors
 #
 # This module is part of libpy and is released under
-# the GPL v3 License: https://www.gnu.org/licenses/gpl-3.0.txt
+# the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt
 from libpy.Config import Config
 from git import Repo,Git
 import libpy.Log as Log
@@ -43,11 +43,15 @@ class pygitlib:
 			shutil.rmtree(wkdir)
 		Log.debug(3,'now at {}',os.getcwd())
 		self.configure_create()
-		#self.repo = Repo.clone_from(Config.git.source,wkdir,branch=branch)
-		self.repo = Repo.clone_from('git@{}:{}'.format(
-				'rf_def',self.__get_source_address()[1])
-			,wkdir,branch=branch)
-		self.revert_configure()
+		try:
+			#self.repo = Repo.clone_from(Config.git.source,wkdir,branch=branch)
+			self.repo = Repo.clone_from('git@{}:{}'.format(
+					'rf_def',self.__get_source_address()[1])
+				,wkdir,branch=branch)
+		except Exception as e:
+			raise e
+		finally:
+			self.revert_configure()
 		Log.debug(2,'Exiting pygitlib.clone()')
 
 	def load_git_dir(self,target=wkdir):
