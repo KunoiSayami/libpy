@@ -4,6 +4,19 @@
 #
 # This module is part of libpy and is released under
 # the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import unicode_literals
 import datetime
 import os
@@ -35,3 +48,24 @@ def sql_clear_comment(sql_file_path):
 				#content.append(x)
 				fout.write(x)
 				Log.debug(5, '[x = {}]',x[:-1])
+
+def split_list(l, split_count, Fill_with_None=False):
+	assert isinstance(l, list) or l is None
+	Count = len(l)//split_count
+	Log.debug(3, 'Count:{}', Count)
+	if Count == 0:
+		tmp = [[x] for x in l]
+		if Fill_with_None:
+			for x in xrange(len(tmp), split_count):
+				tmp.append(None)
+		return tmp
+	if len(l)%split_count:
+		Count += 1
+	tmp = [l[Count*x:Count*(x+1)] for x in xrange(0, split_count)]
+	for x in tmp:
+		if x == []:
+			tmp.remove(x)
+	if Fill_with_None:
+		for x in xrange(len(tmp), split_count):
+			tmp.append(None)
+	return tmp
