@@ -55,18 +55,19 @@ class telepot_bot:
 		return self.bot_id
 
 	def sendMessage(self,chat_id,message,**kwargs):
+		return_value = None
 		while True:
 			try:
 				Log.debug(2,'Calling telepot_bot.sendMessage() [chat_id = {},message = {}, kwargs = {}]',
 					chat_id, repr(message), kwargs)
-				self.bot.sendMessage(chat_id, message, **kwargs)
+				return_value = self.bot.sendMessage(chat_id, message, **kwargs)
 				break
 			except telepot.exception.TelegramError as e:
 				# Markdown fail
 				if self.fail_with_md is not None and e[-1]['error_code'] == 400 and \
 					'Can\'t find end of the entity starting at byte' in e[-1]['description']:
 					# Must fail safe
-					self.bot.sendMessage(chat_id, self.fail_with_md)
+					return_value = self.bot.sendMessage(chat_id, self.fail_with_md)
 					break
 				else:
 					Log.error('Raise exception: {}',repr(e))
@@ -76,6 +77,7 @@ class telepot_bot:
 				Log.debug(1,'on telepot_bot.sendMessage() [chat_id = {},message = {}, kwargs = {}]',
 					chat_id, repr(message), kwargs)
 				time.sleep(self.WAIT_TIME)
+		return return_value
 
 	def glance(self,msg):
 		while True:
