@@ -34,6 +34,6 @@ class DiskCache:
 			fout.write(repr(cache_target))
 	def read_without_except(self):
 		try:
-			self.read()
+			return self.read()
 		except IOError:
 			return self.default_return_type
