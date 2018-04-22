@@ -110,11 +110,11 @@ def write_traceback_error(error_msg, *args, **kwargs):
 	finally:
 		printLock.release()
 
-def log(lvl, bLog, prtTarget, s, start='', end='\n', pre_print=True):
+def log(lvl, bLog, prtTarget, s, start='', end='\n', pre_print=True, need_put_queue=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
 	f = {'stdout': sys.stdout, 'stderr': sys.stderr}.get(prtTarget)
 	printLock.acquire()
-	if lvl in ('ERROR','WARN'):
+	if lvl in ('ERROR','WARN') and need_put_queue:
 		error_queue.put(s)
 	try:
 		if pre_print and f:
