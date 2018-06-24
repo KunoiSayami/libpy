@@ -21,9 +21,9 @@ from __future__ import print_function, division, unicode_literals
 import sys
 import time
 import datetime
-import inspect,os
+import traceback
+import inspect, os
 from Queue import Queue
-import traceback,tempfile
 from threading import Lock
 from libpy.Config import Config
 
@@ -50,7 +50,7 @@ def print_call_backfunc():
 	r = inspect.getouterframes(t)
 	s = 'Stack track:\n'
 	for x in r[1:]:
-		s += '\t\t\t\t\t\tIn {}:{} function:{}\n'.format(x[1],x[2],x[3])
+		s += '\t\t\t\t\t\tIn {}:{} function:{}\n'.format(*x[1:])
 	debug(3,'{}'.format(s))
 	del r
 	del t
@@ -94,21 +94,20 @@ def reopen(path):
 def tfget(value):
 	return 'On' if value else 'Off'
 
-def write_traceback_error(error_msg, *args, **kwargs):
-	error(error_msg, pre_print=False, *args, **kwargs)
+def write_exception_error(pre_print=True):
+	if pre_print: traceback.print_exc()
 	printLock.acquire()
 	try:
-		tmpfile = tempfile.SpooledTemporaryFile(mode='w')
-		traceback.print_exc(file=tmpfile)
-		tmpfile.seek(0)
-		s = tmpfile.read()
-		tmpfile.close()
-		del tmpfile
 		if Config.log.log_err and logFile:
-			logFile.write(s)
+			logFile.write(traceback.format_exc())
 			logFile.flush()
 	finally:
 		printLock.release()
+	
+
+def write_traceback_error(error_msg, *args, **kwargs):
+	error(error_msg, pre_print=False, *args, **kwargs)
+	write_exception_error(False)
 
 def log(lvl, bLog, prtTarget, s, start='', end='\n', pre_print=True, need_put_queue=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
