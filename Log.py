@@ -103,7 +103,6 @@ def write_exception_error(pre_print=True):
 			logFile.flush()
 	finally:
 		printLock.release()
-	
 
 def write_traceback_error(error_msg, *args, **kwargs):
 	error(error_msg, pre_print=False, *args, **kwargs)
