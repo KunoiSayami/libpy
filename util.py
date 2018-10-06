@@ -69,3 +69,21 @@ def split_list(l, split_count, Fill_with_None=False):
 		for x in xrange(len(tmp), split_count):
 			tmp.append(None)
 	return tmp
+
+def custom_diff(diff1,diff2):
+	d1 = []
+	d2 = []
+	with open(diff1) as fin:
+		r = fin.readlines()
+	for x in r:
+		if x[:2] != '--':
+			d1.append(x)
+	with open(diff2) as fin:
+		r = fin.readlines()
+	for x in r:
+		if x[:2] != '--':
+			d2.append(x)
+	#Log.debug(3, '[d1 == d2 = {}]', d1 == d2)
+	#Log.debug(3, '[d1 = {}]', d1)
+	#Log.debug(3, '[d2 = {}]', d2)
+	return d1 == d2

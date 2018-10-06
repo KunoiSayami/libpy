@@ -27,16 +27,6 @@ from cryptography.hazmat.primitives.ciphers import (
 )
 from base64 import b64encode,b64decode
 from libpy.Config import Config
-import re
-
-# security check
-assert(Config.encrypt.key)
-assert(type(Config.encrypt.key) == type(str()) and
-	Config.encrypt.key != str())
-assert(len(Config.encrypt.key)>6)
-if Config.encrypt.require_strong_key:
-	assert(re.match(r'^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$',
-		Config.encrypt.key))
 
 key = hashlib.sha256(Config.encrypt.key.encode()).digest()
 

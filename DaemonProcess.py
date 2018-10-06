@@ -21,14 +21,14 @@ import platform
 import sys, os, signal
 from subprocess import Popen
 
+def doNothing_func(): pass
+
 class DaemonProcess:
-	def __init__(self, custom_args, entry_function, func_help_msg, kill_with_signal=signal.SIGINT):
+	def __init__(self, custom_args, entry_function, func_help_msg = doNothing_func, kill_with_signal = signal.SIGINT):
 		if len(sys.argv) == 2:
 			if sys.argv[1] in custom_args:
-				Popen(['python', sys.argv[0], '--daemon-start'])
+				Popen(['python', sys.argv[0], '--daemon-start'], stdout=open(os.devnull, 'w'), close_fds=True)
 			elif sys.argv[1] == '--daemon-start':
-				# Redirect stdout to null
-				sys.stdout = open('/dev/null' if platform.system() != 'Windows' else 'nul', 'w')
 				with open('pid', 'w') as fout:
 					fout.write(str(os.getpid()))
 				entry_function()
