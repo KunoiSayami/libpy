@@ -42,10 +42,10 @@ class telepot_bot:
 		Log.debug(2,'Exit telepot_bot.__init__()')
 
 	# Reserved for user init
-	def custom_init(self,*args,**kwargs):
+	def custom_init(self, *args, **kwargs):
 		pass
 
-	def message_loop(self,on_message_function):
+	def message_loop(self, on_message_function):
 		Log.info('Starting message_loop()')
 		self.bot.message_loop(on_message_function)
 		Log.info('message_loop() is now started!')
@@ -54,7 +54,7 @@ class telepot_bot:
 		Log.debug(2,'Calling telepot_bot.getid() [return {}]',self.bot_id)
 		return self.bot_id
 
-	def sendMessage(self,chat_id,message,**kwargs):
+	def sendMessage(self, chat_id, message, **kwargs):
 		return_value = None
 		while True:
 			try:
@@ -67,7 +67,7 @@ class telepot_bot:
 				if self.fail_with_md is not None and e[-1]['error_code'] == 400 and \
 					'Can\'t find end of the entity starting at byte' in e[-1]['description']:
 					# Must fail safe
-					return_value = self.bot.sendMessage(chat_id, self.fail_with_md)
+					return_value = self.bot.sendMessage(chat_id,'Error: {}\nRaw description: {}'.format(self.fail_with_md, e[-1]['description']))
 					break
 				else:
 					Log.error('Raise exception: {}',repr(e))
@@ -79,7 +79,7 @@ class telepot_bot:
 				time.sleep(self.WAIT_TIME)
 		return return_value
 
-	def glance(self,msg):
+	def glance(self, msg):
 		while True:
 			try:
 				Log.debug(2,'Calling telepot.glance()')
@@ -95,6 +95,6 @@ class telepot_bot:
 				time.sleep(0.03)
 		return (content_type, chat_type, chat_id)
 
-	def onMessage(self,msg):
+	def onMessage(self, msg):
 		content_type, chat_type, chat_id = self.glance(msg)
 		self.sendMessage(chat_id,'received')
