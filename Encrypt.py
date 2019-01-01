@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Encrypt.py
-# Copyright (C) 2017-2018 KunoiSayami and contributors
+# Copyright (C) 2017-2019 KunoiSayami
 #
 # This module is part of libpy and is released under
 # the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # DiskCache.py
-# Copyright (C) 2018 KunoiSayami and contributors
+# Copyright (C) 2018-2019 KunoiSayami and contributors
 #
 # This module is part of libpy and is released under
 # the AGPL v3 License: https://www.gnu.org/licenses/agpl-3.0.txt
