@@ -104,9 +104,16 @@ def write_exception_error(pre_print=True):
 	finally:
 		printLock.release()
 
-def write_traceback_error(error_msg, *args, **kwargs):
+def exc(error_msg, *args, **kwargs):
 	error(error_msg, pre_print=False, *args, **kwargs)
 	write_exception_error(False)
+
+def write_traceback_error(error_msg, *args, **kwargs):
+	try:
+		raise RuntimeWarning("This fuction is rename to exc")
+	except:
+		traceback.print_exc(file=sys.stderr)
+	exc(error_msg, *args, pre_print=False, **kwargs)
 
 def log(lvl, bLog, prtTarget, s, start='', end='\n', pre_print=True, need_put_queue=True):
 	s = '{}[{}] [{}]\t[{}] {}{}'.format(start, time.strftime('%Y-%m-%d %H:%M:%S'), lvl, get_name(), s, end)
